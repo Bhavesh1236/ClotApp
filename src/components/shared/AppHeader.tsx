@@ -17,12 +17,13 @@ function AppHeader({ title, }: Props): React.JSX.Element {
     const navigation = useNavigation<any>(); 
 
 
-    function handleSignOut(){
-        signOut().then(() => {
+    async function handleSignOut(){
+        await signOut().then(() => {
             setIsMenuOpen(false);
             navigation.reset({index: 0, routes: [{name: 'Login'}]});
         });
     }
+
 
     function handleDeleteAccount(){
         deleteAccount().then(() => {

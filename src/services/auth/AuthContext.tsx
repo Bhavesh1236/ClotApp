@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 interface AuthContextType {
   user: any;
@@ -8,7 +9,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  googleSignIn: () => Promise<void>;
+  googleSignIn: () => Promise<FirebaseAuthTypes.User | void>;
   isLoggedIn: boolean;
   deleteAccount: () => Promise<void>;
 }
@@ -30,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '658814428344-0mrgd21qg92dvp5oe0823ud4m4c9nbfp.apps.googleusercontent.com',
+      webClientId: '658814428344-9ijr452f789i1dp5q4u548p8oijgo7p9.apps.googleusercontent.com',
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], //https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive
       offlineAccess: true,
       forceCodeForRefreshToken: true,
@@ -91,7 +92,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await auth().signOut();
+      const currentUser = GoogleSignin.getCurrentUser();
+      if(currentUser?.idToken){
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      } else {
+        await auth().signOut();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -101,25 +108,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // First, make sure the user is signed out of Google
       await GoogleSignin.signOut();
-      
-      // Check if Play Services are available
-      await GoogleSignin.hasPlayServices();
-      
-      // Perform the sign-in
-      const userInfo: any = await GoogleSignin.signIn();
-      console.log('userInfo:',userInfo);
-      
-      // Get the auth credential
-      const googleCredential = auth.GoogleAuthProvider.credential(userInfo?.idToken);
-      console.log('googleCredential:',googleCredential);
-      
-      // Sign in to Firebase with the credential
-      auth().signInWithCredential(googleCredential).then((res: any) => {
-        console.log('res googleSignIn:',res);
-        return res;
-      }).catch((error: any) => {
-        console.error(error);
-      });
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const userInfo: any= await GoogleSignin.signIn();      
+      const googleCredential = auth.GoogleAuthProvider.credential(userInfo.data.idToken);
+      // Return the result of signInWithCredential
+      const result = await auth().signInWithCredential(googleCredential);
+      console.log('Google Sign-In Success:', result.user);
+      return result.user; // Return the user object        
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         throw new Error('User cancelled the sign-in flow');
@@ -128,7 +123,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         throw new Error('Play services not available');
       } else {
-        throw new Error('Google Sign-In Error:' + error.message);
+        console.error('Google Sign-In Error:', error);
+        throw error; // Throw the error to be caught by the caller
       }
     }
   };
