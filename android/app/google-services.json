@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "658814428344",
+    "project_id": "clotapp-676f2",
+    "storage_bucket": "clotapp-676f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658814428344:android:ff3aacf5b433edf844004d",
+        "android_client_info": {
+          "package_name": "com.clotapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658814428344-0mrgd21qg92dvp5oe0823ud4m4c9nbfp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clotapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "658814428344-rkd2p9fhq9816vbhjh3c2fvb8p38sig1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clotapp",
+            "certificate_hash": "981a647e7083de5241e86162d2dfed69b79292b1"
+          }
+        },
+        {
+          "client_id": "658814428344-9ijr452f789i1dp5q4u548p8oijgo7p9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmeuTMXpJaFPMcvU9xb-POnJNTHl6IpdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658814428344-9ijr452f789i1dp5q4u548p8oijgo7p9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
