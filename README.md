@@ -5,7 +5,7 @@ This application is based on [Figma design templates](https://www.figma.com/desi
 
 # App Cover Screenshots
 
-![App Cover](./src/assets/images/Cover.png)
+![App Cover](./src/assets/images/Frame.png)
 
 ## Get Started
 
